@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 
-const CreateNotes = () => {
+const CreateNotes = (props) => {
   const [note, setNote] = useState({
     title: '',
     content: '',
   });
+
+  const [expand, setExpand] = useState(false);
 
   const InputEvent = (event) => {
     // const value = event.target.value;
     // const name = event.target.name;
 
     const { name, value } = event.target;
+
+    event.preventDefault();
 
     setNote((preVal) => {
       return {
@@ -20,10 +24,25 @@ const CreateNotes = () => {
     });
     console.log(note);
   };
+
+  const addEvents = (event) => {
+    props.passNote(note);
+    event.preventDefault();
+    setNote({
+      title: '',
+      content: '',
+    });
+  };
+
+  const expandIt = ()=>{
+    setExpand(true)
+  }
   return (
     <>
       <div className="main_note">
         <form>
+
+          {expand?
           <input
             type="text"
             value={note.title}
@@ -32,6 +51,8 @@ const CreateNotes = () => {
             placeholder="Title"
             autocomplete="off"
           />
+          : null}
+
           <textarea
             rows=""
             coloumns=""
@@ -39,8 +60,13 @@ const CreateNotes = () => {
             onChange={InputEvent}
             name="content"
             placeholder="Write a note..."
+            onClick={expandIt}
           />
-          <button>+</button>
+
+          {expand?
+          <button onClick={addEvents}>+</button>
+          :null}
+          
         </form>
       </div>
     </>
